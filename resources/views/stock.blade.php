@@ -3,12 +3,10 @@
 @section('content')
 
 <main class="py-4">
-        </div>
         <div class="col-md-11 mx-auto">
             <div class="card">
                 <div class="card-header">
                     <h4 class='text-center'>在庫商品一覧</h1>
-                        
                     <!-- 検索フォームここから -->
                         @auth
                         @if (auth()->user()->role === 1)
@@ -22,56 +20,46 @@
                         </div>
                         @endif
                         @endauth
-
-
                 </div> 
 
                         <!-- 在庫商品リストここから -->
-                        <div class="card-body">
-                                <div class="card-body">
-                                    <table class='table'>
-                                        <thead>
-                                            <tr class="d-flex justify-content-center">
-                                                <th class="my-box w-25" scope='col'></th>
-                                                <th class="my-box w-25" scope='col'>店舗名</th>
-                                                <th class="my-box w-25" scope='col'>商品名</th>
-                                                <th class="my-box w-25" scope='col'>数量</th>
-                                                <th class="my-box w-25" scope='col'>重量(g)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <div class= list>
-                                                <div class="container">
-                                                    <input type="hidden" id="count" value=0>
-                                                     <div id="content">
-                                                        @foreach($stocks as $stock)
-                                                            @csrf         
-                                                            <tr class="d-flex justify-content-center">
-                                                                <th scope='col'><img class="w-25 p-3" src="{{asset('storage/images/'.$stock->image)}}" alt=""></th>
-                                                                <th class="my-box w-25" scope='col'>{{ $stock['shop_id'] }}</th>
-                                                                <th class="my-box w-25" scope='col'>{{ $stock['stock_name'] }}</th>
-                                                                <th class="my-box w-25" scope='col'>{{ $stock['total_quantity'] }}</th>
-                                                                <th class="my-box w-25" scope='col'>{{ $stock['total_weight'] }}</th>
-                                                                @auth
-                                                                @if (auth()->user()->shop_id == $stock['shop_id'] )
-                                                                <th scope='col'>
-                                                                    <a href="{{route('delete.stock', $stock['products_id'])}}">
-                                                                    <button class='btn btn-secondary' type = "button">削除</button>
-                                                                    </a>
-                                                                </th>
-                                                                @endif
-                                                                @endauth
-                                                            </tr>
-                                                        @endforeach
-
-                                                     </div>
-                                                </div>
-                                            </div>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                   
+                <div class="card-body">
+                     <table class='table'>
+                        <thead>
+                            <tr class="d-flex justify-content-center text-center">
+                                <th class="my-box w-25" scope='col'></th>
+                                <th class="my-box w-25" scope='col'>店舗名</th>
+                                <th class="my-box w-25" scope='col'>商品名</th>
+                                <th class="my-box w-25" scope='col'>数量</th>
+                                <th class="my-box w-25" scope='col'>重量(g)</th>
+                                <th class="my-box w-25" scope='col'></th>
+                            </tr>
+                        </thead>
+                        <input type="hidden" id="count" value="0">
+                    <tbody id="content">
+                                @foreach($stocks as $stock)
+                                <tr class="d-flex justify-content-center w-100% text-center">
+                                    <th class="my-box w-25" scope='col'><img style="object-fit:cover; width: 5rem; height: 5rem;" src="{{asset('storage/images/'.$stock->image)}}" alt=""></th>
+                                    <th class="my-box w-25" scope='col'>{{ $stock['shop_id'] }}</th>
+                                    <th class="my-box w-25" scope='col'>{{ $stock['stock_name'] }}</th>
+                                    <th class="my-box w-25" scope='col'>{{ $stock['total_quantity'] }}</th>
+                                    <th class="my-box w-25" scope='col'>{{ $stock['total_weight'] }}</th>
+                                        @auth
+                                        @if (auth()->user()->shop_id == $stock['shop_id'] )
+                                    <th class="my-box w-25" scope='col'>
+                                        <a href="{{route('delete.stock', $stock['products_id'])}}">
+                                            <button class='btn btn-secondary' type = "button">削除</button>
+                                         </a>
+                                    </th>
+                                        @else
+                                    <th class="my-box w-25" scope='col'></th>
+                                        @endif
+                                        @endauth
+                                </tr>
+                                        @endforeach
+                    </tbody>
+                         </table>
+                </div>
             </div>
         </div>
 </main>
@@ -105,8 +93,7 @@ function ajaxAddContent() {
     var add_content = "";
     // コンテンツ件数           
     count = count + 1;
-    var search = $("#keyword").val();
-
+    var search = $("#keyword").val()
 
     // ajax処理
     $.post({
@@ -121,13 +108,42 @@ function ajaxAddContent() {
     }).done(function(data){
         console.log(data);
        
+        
         $.each(data[1],function(key, val){
-              add_content += `<tr class="d-flex justify-content-center"><th scope='col'><img class="w-25 p-3" src="	http://localhost:8000/storage/images/${val.image}" alt=""></th><input type="hidden"  name="products_id" value="{{$stock['products_id']}}"><th class="my-box w-25" scope='col'>${val.shop_id}</th><th class="my-box w-25" scope='col'>${val.stock_name}</th><th class="my-box w-25" scope='col'>${val.total_quantity}</th><th class="my-box w-25" scope='col'>${val.total_weight}</th></tr>`;
+            if(data[2] == val.shop_id){
+              add_content +=
+              `<tr class="d-flex justify-content-center w-100% text-center">
+                <th class="my-box w-25" scope='col'><img style="object-fit:cover; width: 5rem; height: 5rem;" src="storage/images/${val.image}" alt=""></th>
+                <th class="my-box w-25" scope='col'>${val.shop_id}</th>
+                <th class="my-box w-25" scope='col'>${val.stock_name}</th>
+                <th class="my-box w-25" scope='col'>${val.total_quantity}</th>
+                <th class="my-box w-25" scope='col'>${val.total_weight}</th>
+                <th class="my-box w-25" scope='col'></th>
+              </tr>
+              `
+            }else{
+                add_content +=
+              `<tr class="d-flex justify-content-center w-100% text-center">
+                <th class="my-box w-25" scope='col'><img style="object-fit:cover; width: 5rem; height: 5rem;" src="storage/images/${val.image}" alt=""></th>
+                <th class="my-box w-25" scope='col'>${val.shop_id}</th>
+                <th class="my-box w-25" scope='col'>${val.stock_name}</th>
+                <th class="my-box w-25" scope='col'>${val.total_quantity}</th>
+                <th class="my-box w-25" scope='col'>${val.total_weight}</th>
+                <th class="my-box w-25" scope='col'>
+                    <a href="/delete_stock/${val.products_id}">
+                        <button class='btn btn-secondary' type = "button">削除</button>
+                    </a>
+                </th>
+              </tr>
+              `
+
+            }
         })
         
+
         // 取得件数を加算してセット
         $("#content").append(add_content);
-        $("#count").val(data[1]);
+        $("#count").val(data[0]);
     }).fail(function(e){
         console.log(e);
     })

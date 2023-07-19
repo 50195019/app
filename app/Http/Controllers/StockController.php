@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class StockController extends Controller
 {
     public function stockPage(Request $request){
+        $count = 10;
+
         if(Auth::user()->role === 1){
         $shop = Auth::user();
         $keyword = $request->input('keyword');
@@ -22,7 +24,7 @@ class StockController extends Controller
         $stocks = $stock->select('stock_name','shop_id','image','products_id')
         ->selectRaw('SUM(weight) AS total_weight, SUM(quantity) AS total_quantity',)
         ->groupBy('stock_name','shop_id','image','products_id')
-        ->limit(10)->get(); 
+        ->limit($count)->get(); 
 
         return view('stock',compact('stocks', 'keyword','shop')
         );
@@ -34,18 +36,19 @@ class StockController extends Controller
         $stocks = $stock->select('stock_name','shop_id','image','products_id')
         ->selectRaw('SUM(weight) AS total_weight, SUM(quantity) AS total_quantity',)
         ->groupBy('stock_name','shop_id','image','products_id')->where('shop_id',$shop)
-        ->limit(10)->get();
+        ->limit($count)->get();
             
         return view('stock',compact('stocks')
         );
         }
     }
     public function ajaxStock(Request $request){
-
-        if(Auth::user()->role === 1){
-            $shop = Auth::user();
             $count = $request->count * 5;
             $keyword = $request->search;
+            $user_id = Auth::user()->shop_id;
+        if(Auth::user()->role === 1){
+            $shop = Auth::user();
+           
             $stock = Stock::query();
     
             if(!empty($keyword)) {
@@ -57,8 +60,8 @@ class StockController extends Controller
             ->groupBy('stock_name','shop_id','image','products_id')
             ->offset($count)->limit(5)->get();
     
-            $counts = $count + 6;
-            return array($counts, $stocks);
+            $counts = $count + 5;
+            return array($counts, $stocks, $user_id);
 
             }else{
             $stock = new Stock;
@@ -70,8 +73,8 @@ class StockController extends Controller
             ->groupBy('stock_name','shop_id','image','products_id')->where('shop_id',$shop)
             ->offset($count)->limit(5)->get();
                 
-            $counts = $count + 6;
-            return array($counts, $stocks);
+            $counts = $count + 5;
+            return array($counts, $stocks, $user_id);
             }
 
     }
