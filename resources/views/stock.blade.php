@@ -13,8 +13,8 @@
                         <div class="row justify-content-right">
                              <form action ="{{ route('stock.page') }}"  method="GET"  class="form-inline my-2 my-lg-0 ml-2">
                                 <div class="form-group">
-                                    <input type="text" class="form-control mr-sm-2" name="keyword" id='keyword'  value="{{ $keyword }}" placeholder="店舗検索" aria-label="検索...">
-                                    <button type="submit" class="btn btn-info">検索</button>
+                                    <input type="text" class="form-control mr-sm-2 border border-secondary" name="keyword" id='keyword'  value="{{ $keyword }}" placeholder="店舗検索" aria-label="検索...">
+                                    <button type="submit" class="btn btn-info border border-secondary">検索</button>
                                 </div>
                             </from> 
                         </div>
@@ -110,7 +110,7 @@ function ajaxAddContent() {
        
         
         $.each(data[1],function(key, val){
-            if(data[2] == val.shop_id){
+            if(data[2] != val.shop_id){
               add_content +=
               `<tr class="d-flex justify-content-center w-100% text-center">
                 <th class="my-box w-25" scope='col'><img style="object-fit:cover; width: 5rem; height: 5rem;" src="storage/images/${val.image}" alt=""></th>

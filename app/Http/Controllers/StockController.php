@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class StockController extends Controller
 {
     public function stockPage(Request $request){
-        $count = 10;
+        $count = 3;
 
         if(Auth::user()->role === 1){
         $shop = Auth::user();
@@ -43,7 +43,7 @@ class StockController extends Controller
         }
     }
     public function ajaxStock(Request $request){
-            $count = $request->count * 5;
+            $count = $request->count * 3;
             $keyword = $request->search;
             $user_id = Auth::user()->shop_id;
         if(Auth::user()->role === 1){
@@ -58,9 +58,9 @@ class StockController extends Controller
             $stocks = $stock->select('stock_name','shop_id','image','products_id')
             ->selectRaw('SUM(weight) AS total_weight, SUM(quantity) AS total_quantity',)
             ->groupBy('stock_name','shop_id','image','products_id')
-            ->offset($count)->limit(5)->get();
+            ->offset($count)->limit(3)->get();
     
-            $counts = $count + 5;
+            $counts = $count + 3;
             return array($counts, $stocks, $user_id);
 
             }else{
@@ -71,9 +71,9 @@ class StockController extends Controller
             $stocks = $stock->select('stock_name','shop_id','image','products_id')
             ->selectRaw('SUM(weight) AS total_weight, SUM(quantity) AS total_quantity',)
             ->groupBy('stock_name','shop_id','image','products_id')->where('shop_id',$shop)
-            ->offset($count)->limit(5)->get();
+            ->offset($count)->limit(3)->get();
                 
-            $counts = $count + 5;
+            $counts = $count + 3;
             return array($counts, $stocks, $user_id);
             }
 

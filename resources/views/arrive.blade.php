@@ -21,9 +21,10 @@
                             <!-- 検索フォームここから -->
                             <form action ="{{ route('arrive.page') }}"  method="GET"  class="form-inline my-2 my-lg-0 ml-2">
                                 <div class="form-group">
-                                    <input type="text" class="form-control mr-sm-2" name="keyword"  value="{{ $keyword }}" placeholder="キーワードを入力" aria-label="検索...">
+                                    <input type="text" class="form-control mr-sm-2 border  border-secondary" name="keyword"  value="{{ $keyword }}" placeholder="キーワードを入力" aria-label="検索...">
                                 </div>
                         </div>
+                        <p></p>
                         <!-- 日付検索ここから -->
                         <div class="row justify-content-right">
                             <!-- <div class='text-center'>日付検索</div> -->
